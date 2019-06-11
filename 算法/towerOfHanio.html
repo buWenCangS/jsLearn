@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>汉诺塔</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <p>请输入汉诺塔圆盘数量</p>
+    <input type="text" id="ipt">
+    <input type="button" id="btn" value="start">
+    <div id="hanoi"></div>
+    <script>
+        var han = document.getElementById('hanoi');
+        // function hanoi(n, x, y, z) {
+        //     return n == 1 ? (move(x, 1, z)) : (hanoi(n - 1, x, z, y), move(x, n, z), hanoi(n - 1, y, x, z));
+        // }
+        document.getElementById("btn").onclick = function () {
+            var ipt = document.getElementById("ipt").value;
+            function hanoi(n, towerA, towerB, towerC) {
+                index++; 
+                if (n == 1) {
+                     console.log(towerA + "to" + towerC); 
+                }else { 
+                    hanoi(n - 1, towerA, towerC, towerB); 
+                    console.log(towerA + "to" + towerC);
+                    hanoi(n - 1, towerB, towerA, towerC); 
+                }
+            }
+            var towerA = "A";
+            var towerB = "B";
+            var towerC = "C";
+            var index = 0;
+            hanoi(3, towerA, towerB, towerC);
+        }
+        function move(x, n, z) {
+            var div = document.createElement("div");
+            div.innerHTML = "碟子" + n + "从塔" + x + "移动到" + z;
+            han.insertAdjacentElement("beforeend", div);
+        }
+    </script>
+</body>
+
+</html>
