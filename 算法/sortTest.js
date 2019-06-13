@@ -42,10 +42,10 @@ function bubbling2(arr) {
 
 var arrs = createArray();
 var arrs2 = createArray();
-function createArray(){
+function createArray() {
     var arrs = [];
     for (let i = 0; i < 10; i++) {
-        arrs[i] = i + Math.floor(Math.random() * 100);
+        arrs[i] = i + Math.floor(Math.random() * 120);
     }
     return arrs;
 
@@ -89,17 +89,20 @@ console.log('\n插入排序 ****************************************************
 // 但是冒泡和选择， 是会将剩余的数据都进行比较的
 function insertSort(arr) {
     var index = -1;
+    var temp = 0;
     var str = '';
     for (let i = 1; i < arr.length; i++) {
         index = i;
+        temp = arr[index];
         str = '\n'
         str += arr[i] + '       和      ' + arr[index - 1] + '比较开始 >>>>>>>> \n';
-        while (arr[i] < arr[index - 1] && index > 0) {
+        while (temp < arr[index - 1] && index > 0) {
             str += arr[i] + '       <      ' + arr[index - 1] + '比较\n';
+            arr[index] = arr[index - 1];
             index--;
         }
         console.log(str);
-        [arr[index], arr[i]] = [arr[i], arr[index]];
+        arr[index] = temp;
         console.log(arr);
     }
     console.log(arr);
@@ -174,7 +177,7 @@ function quickSort(arr) {
 function sort(arr, low, hei) {
     var midle = Math.floor((low + hei) / 2);
     var value = arr[midle];
-
+    console.log('主元 : ' + value, "下标 : " + midle);
     while (low <= hei) {
         while (arr[low] < value && low <= hei) {
             low++;
@@ -189,13 +192,15 @@ function sort(arr, low, hei) {
             hei--;
         }
     }
+    console.log(arr, '当前的返回中立下标 ' + (low));
+    console.log('进行下一次交换 \n');
     return low;
 }
 
 function quick(arr, low, hei) {
     if (arr.length > 1) {
         var index = sort(arr, low, hei);
-        console.log("当前中立下标" + index);
+        // console.log("当前中立下标" + index);
         if (low < index - 1) {
             quick(arr, low, index - 1);
         }
@@ -244,27 +249,27 @@ function findMaxValue(array) {
 }
 // console.log(countingSort(arrs2));
 
-function countingSort1( arr){
-    if(arr.length > 1){
+function countingSort1(arr) {
+    if (arr.length > 1) {
 
         var max = arr[0];
-        for(let i = 1; i < arr.length; i ++){
-            if(arr[i] > max){
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
                 max = arr[i];
             }
         }
         var countArr = new Array(max + 1); // 创建最大数值的数组
-        for(let i = 0; i < arr.length; i ++){
-            if(! countArr[arr[i]]){
+        for (let i = 0; i < arr.length; i++) {
+            if (!countArr[arr[i]]) {
                 countArr[arr[i]] = 0;
             }
-            countArr[arr[i]] ++; // 记录当前数字出现的次数， 下标记录数组的元素， 元素记录个数
+            countArr[arr[i]]++; // 记录当前数字出现的次数， 下标记录数组的元素， 元素记录个数
         }
-        console.log('当前计数数组的大小 : '+ max + ', 计数数组 ==' + countArr);
+        console.log('当前计数数组的大小 : ' + max + ', 计数数组 ==' + countArr);
         var index = 0;
-        for(let i = 0 ; i < countArr.length; i ++){
-            while(countArr[i]-- > 0){ // 拿出数据
-                arr[index ++] = i;
+        for (let i = 0; i < countArr.length; i++) {
+            while (countArr[i]-- > 0) { // 拿出数据
+                arr[index++] = i;
             }
         }
     }
@@ -280,7 +285,7 @@ console.log('\n 桶排序 ******************************************************
 var arrs8 = createArray();
 console.log(arrs8);
 
-function bucketSort(arr, bucketSize = 5){
+function bucketSort(arr, bucketSize = 5) {
     var result = [];
     var bucket = createBucket(arr, bucketSize);
     for (let index = 0; index < bucket.length; index++) {
@@ -292,19 +297,19 @@ function bucketSort(arr, bucketSize = 5){
     return result;
 }
 
-function createBucket (arr, bucketSize){
-    if(arr.length > 1){
+function createBucket(arr, bucketSize) {
+    if (arr.length > 1) {
         let max = arr[0];
         let min = arr[0];
-        for(let i = 0; i < arr.length; i ++){
-            if(max < arr[i]){
+        for (let i = 0; i < arr.length; i++) {
+            if (max < arr[i]) {
                 max = arr[i];
-            }else if(min > arr[i]){
+            } else if (min > arr[i]) {
                 min = arr[i];
             }
         }
         // 根据数组的差值 和桶的数组长度， 计算出桶的个数， 然后创建桶
-        let bucketCount = Math.floor((max - min ) / bucketSize) + 1;
+        let bucketCount = Math.floor((max - min) / bucketSize) + 1;
         let bucket = [];
         for (let i = 0; i < bucketCount; i++) {
             bucket[i] = [];
@@ -314,7 +319,7 @@ function createBucket (arr, bucketSize){
             const element = arr[index];
             const bucketIndex = Math.floor((element - min) / bucketSize);// 根据区间的值划分桶的位置
             bucket[bucketIndex].push(element); // 将同一个区间的数值 装到一个桶中
-            console.log('index === ' + element + ' - '+ min + ' / ' + bucketSize);
+            console.log('index === ' + element + ' - ' + min + ' / ' + bucketSize);
             console.log("区间桶 " + bucketIndex + ' = ' + bucket[bucketIndex]);
         }
         return bucket;
@@ -324,5 +329,109 @@ function createBucket (arr, bucketSize){
 
 console.log(bucketSort(arrs8));
 
-// var arrs9 = createArray();
-// console.log(arrs9);
+console.log('\n 基数排序 *****************************************************************');
+var arrs9 = createArray();
+console.log(arrs9);
+
+//基数排序
+// 根据数组中元素的进制排序， 数组中每一位的大小
+function radixSort(arr, radixBase = 10) {
+    if (arr.length < 2) return arr;
+    let value = findMinMaxValue(arr);
+    let min = value[0];
+    let max = value[1];
+    let base = 1;
+    while ((max) / (base) >= 1) {
+        arr = rSort(arr, radixBase, base, min);
+        base *= radixBase;
+    }
+
+    return arr;
+}
+
+function rSort(arr, radixBase, ss, min) {
+    var duckets = [],
+        index = 0;
+    for (let i = 0; i < radixBase; i++) {
+        duckets[i] = [];
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+        index = Math.floor(arr[i] / ss) % radixBase;
+        duckets[index].push(arr[i]);
+    }
+    console.log("桶中的数据 : " + duckets);
+    var result = [];
+    for (let i = 0; i < duckets.length; i++) {
+        while (duckets[i].length > 0) {
+            result.push(duckets[i].shift());
+        }
+    }
+    return result;
+}
+
+function findMinMaxValue(arr) {
+    let min = arr[0];
+    let max = arr[0];
+    for (let i = 0; i < arr.length; i++) {
+        if (max < arr[i]) {
+            max = arr[i];
+        } else if (min > arr[i]) {
+            min = arr[i];
+        }
+    }
+    return [min, max];
+}
+
+console.log(radixSort(arrs9));
+
+
+console.log('\n 书上demo基数排序 *****************************************************************');
+var arrs10 = createArray();
+console.log(arrs10);
+function radixSortPlus(array, radixBase = 10) {
+    if (array.length < 2) {
+        return array;
+    }
+    const values = findMinMaxValue(array);
+    const minValue = values[0];
+    const maxValue = values[1];
+    let significantDigit = 1; // {1}
+    while ((maxValue - minValue) / significantDigit >= 1) { // {2}
+        array = countingSortForRadix(array, radixBase, significantDigit, minValue); // {3}
+        significantDigit *= radixBase; // {4}
+        console.log("排序更新 " + array);
+    }
+    return array;
+}
+
+function countingSortForRadix(array, radixBase, significantDigit, minValue) {
+    let bucketsIndex;
+    const buckets = [];
+    const aux = [];
+    for (let i = 0; i < radixBase; i++) { // {5}
+        buckets[i] = 0;
+    }
+    for (let i = 0; i < array.length; i++) { // {6}
+        bucketsIndex = Math.floor(((array[i] - minValue) / significantDigit) %
+            radixBase); // {7}
+        buckets[bucketsIndex]++; // {8} 记录当前位数字出现的次数
+    }
+    console.log("桶中的记录次数 " + buckets);
+    for (let i = 1; i < radixBase; i++) { // {9}
+        buckets[i] += buckets[i - 1];
+    }
+    console.log("改变后桶中数据 " + buckets);
+    for (let i = array.length - 1; i >= 0; i--) { // {10}
+        bucketsIndex = Math.floor(((array[i] - minValue) / significantDigit) %
+            radixBase); // {11}
+        console.log('当前桶的下标 ： ' +  bucketsIndex + '  value : ' + buckets[bucketsIndex]);
+        aux[--buckets[bucketsIndex]] = array[i]; // {12}
+    }
+    for (let i = 0; i < array.length; i++) { // {13}
+        array[i] = aux[i];
+    }
+    return array;
+}
+
+console.log(radixSortPlus(arrs10, 10));
