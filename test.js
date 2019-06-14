@@ -1,5 +1,5 @@
 // -------------------------------根据关注的点不同， 只在乎has-a的话就 只需要确定是否存在类似的东西就ok了
-alert('ie浏览器......1 ');
+// alert('ie浏览器......1 ');
 var Duck = {
     sound: function () {
         console.log('鸭子 嘎嘎叫');
@@ -20,7 +20,7 @@ animalSound.call(Chicken);
 animalSound.call(Duck);
 console.log(typeof Chicken);
 console.log(Chicken instanceof Object); // true
-alert('ie浏览器......2 ');
+// alert('ie浏览器......2 ');
 
 function animalCall(animl) {
     if (typeof animl.sound == 'function') { // 通过基本类型判断 ， 是否存在该函数
@@ -58,7 +58,7 @@ console.log(Chicken);
 animalMakeSound(new Chicken1())
 animalMakeSound(new Duck1())
 animalMakeSound(new Dog1())
-alert('ie浏览器......3 ');
+// alert('ie浏览器......3 ');
 
 // -------------------------------------------- java script 继承
 // 通过构造函数继承  Chicken1.call(this)
@@ -86,7 +86,7 @@ chicken2.makeSound();
 
 // ------------------------------------------------this
 window.id = 'window has id'
-alert('ie浏览器......4 ');
+// alert('ie浏览器......4 ');
 
 var ob = {
     id: 'ob has id'
@@ -115,7 +115,7 @@ var getName = Tom.getName  // 改变了当前方法的对象  在window的环境
 console.log(Tom.getName())
 console.log(getName())
 
-alert('ie浏览器......5 ');
+// alert('ie浏览器......5 ');
 
 // ----------------------------bind
 Function.prototype.bind = function () {
@@ -323,7 +323,7 @@ var result = zhixing.
             console.log(1);
         }
     ) // return 了一个function对象  return function () { beforfn.apply(this, arguments);return self.apply(this, arguments);
-       // 变成了after中传入的afterfn函数
+    // 变成了after中传入的afterfn函数
     .after(
         function () {
             console.log(3);
@@ -332,15 +332,15 @@ var result = zhixing.
 
 console.log(result);
 // ------------------------------------------ 节流
-var callback = function(){
+var callback = function () {
     console.log('window大小改变n ' + window.innerWidth)
 }
 window.onresize = throttle(callback, 1000);
-function throttle(func,interval){
+function throttle(func, interval) {
     var timer, firstTimer = true, self = this;
-    
-    return function(){
-        if(firstTimer){
+
+    return function () {
+        if (firstTimer) {
             firstTimer = false;
             return func.apply(self, arguments);
         }
@@ -349,7 +349,7 @@ function throttle(func,interval){
         //     return false;
         // }
         clearTimeout(timer); // ---------- 防抖  将每次没到时间的函数取消掉， 只在最后一次时间到是 执行一次
-        timer = setTimeout(function(){
+        timer = setTimeout(function () {
             clearTimeout(timer);
             timer = null;
             func.apply(this, arguments);
@@ -359,31 +359,31 @@ function throttle(func,interval){
 // 防抖和节流的区别 是  防抖只执行一次， 在最后一次操作触发时调用， 节流是在一定的时间内输出
 
 // -------------------------------------------分时加载
-function timeLimitLoad(func ,array, mic){
+function timeLimitLoad(func, array, mic) {
 
     var id;
-    var start = function(){
+    var start = function () {
         for (let i = 0; i < Math.min(mic || 1, array.length); i++) {
             let obj = array.shift();
             func(obj)
         }
     }
 
-    return function(){
-        id = setInterval(function(){
-            if(array.length == 0)clearInterval(id);
+    return function () {
+        id = setInterval(function () {
+            if (array.length == 0) clearInterval(id);
             start();
         }, 800)
     }
 }
 
-function createDiv(text){
+function createDiv(text) {
     var div = document.createElement('div');
     div.innerHTML = text;
     document.body.appendChild(div);
 }
 
-var array = (function(){
+var array = (function () {
     var arr = [];
     for (let i = 0; i < 1000; i++) {
         arr.push(i);
@@ -394,15 +394,15 @@ var array = (function(){
 var timeLimit = timeLimitLoad(createDiv, array, 2);
 
 // ----------------------------------------------惰性加载
-var addEvent = function(elem, type, func){
-    if(window.addEventListener){
+var addEvent = function (elem, type, func) {
+    if (window.addEventListener) {
         console.log('当前的监听方法 ====>>>>>>> ' + window.addEventListener);
-        addEvent = function(elem, type , func){ // 在函数的内部改变函数的指向, 并且仅当调用该函数时才会加载切换
+        addEvent = function (elem, type, func) { // 在函数的内部改变函数的指向, 并且仅当调用该函数时才会加载切换
             window.addEventListener(type, func, false);
         }
-    }else if(window.attachEvent){
+    } else if (window.attachEvent) {
         console.log('当前的监听方法 ====>>>>>>> ' + window.attachEvent);
-        addEvent = function(elem, type, func){
+        addEvent = function (elem, type, func) {
             window.attachEvent('on' + type, func);
         }
     }
@@ -411,6 +411,155 @@ var addEvent = function(elem, type, func){
 }
 
 var openbtn = document.getElementById('open');
-addEvent(openbtn, 'pointermove', function(){
+addEvent(openbtn, 'pointermove', function () {
     alert('偷听到了.....................');
-})
+});
+
+// 关于对象的拷贝, 最简单的实现
+// 通过JSON。stringify将对象转换为 字符串 这样就会在栈内存中创建一个str存储内容
+// 再通过JSON.parse将字符串转换为对象 ， 其主要原理是解决了地址值的传递 ， 而是
+// 真正的创建了一个新的空间存储对象， 创建了一个新的地址访问对象 , 无法实现对象函数的克隆
+function objClone(obj) { // 简单拷贝可以使用， （#####不建议使用)
+    let info = JSON.stringify(obj.info);
+    let copy_info = JSON.parse(info);
+    console.log(info);
+    console.log(copy_info);
+    let str = JSON.stringify(obj);
+    console.log('转换出来的数据 : ' + str);
+    let copy_obj = JSON.parse(str);
+    copy_obj.info = copy_info;
+    return copy_obj;
+}
+
+function Info() {
+    this._age = 0;
+    this.address = ''; // 如果这里使用的是var 声明的私有变量  那么就不会被拷贝到属性中
+
+    this.setAge = function (age) {
+        this._age = age;
+    }
+    this.getAge = function () {
+        return this._age;
+    }
+
+    this.setAddress = function (address) {
+        this._address = address;
+    }
+
+    this.getAddress = function () {
+        return this._address;
+    }
+
+}
+
+function Man() {
+    this.info = {};
+    this.name = '';
+
+    this.setName = function (name) { // 函数无法转换为string 缺陷严重
+        this.name = name;
+    }
+
+}
+
+function testObjClone(callback) {
+    let m1 = new Man();
+    let info = new Info();
+    info.setAge(18);
+    info.setAddress('张家界');
+    m1.info = info;
+    m1.name = '小二';
+
+    let m2 = callback(m1);
+    m1.info.setAddress('钩子');
+    console.log(m1.info.getAddress());
+    console.log(m2.info.getAddress());
+
+}
+
+// testObjClone(objClone);
+
+console.log('浅拷贝测试 -----------------------------------------------');
+//
+// 浅拷贝
+function shallowClone(obj) {
+    var _obj = typeof obj.slice == 'function' ? [] : {};
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            const element = obj[key];
+            _obj[key] = element;
+        }
+    }
+
+    return _obj;
+}
+testObjClone(shallowClone);
+console.log('深拷贝测试 -----------------------------------------------');
+// 深拷贝
+function deepClone(obj, copy_obj) {
+
+}
+
+testObjClone(deepCopy1);
+
+function deepCopy1(p, c) {
+    var c = c || {};
+    for (var i in p) {
+        if (typeof p[i] === 'object') {
+            c[i] = (p[i].constructor === Array) ? [] : {};
+            deepCopy1(p[i], c[i]);
+        } else {
+            c[i] = p[i];
+        }
+    }
+    return c;
+}
+
+function deepCopy2(obj1) {
+    var obj2 = Array.isArray(obj1) ? [] : {};
+    if (obj1 && typeof obj1 === "object") {
+      for (var i in obj1) {
+        if (obj1.hasOwnProperty(i)) {
+          // 如果子属性为引用数据类型，递归复制
+          if (obj1[i] && typeof obj1[i] === "object") {
+            obj2[i] = deepCopy2(obj1[i]);
+          } else {
+            // 如果是基本数据类型，只是简单的复制
+            obj2[i] = obj1[i];
+          }
+        }
+      }
+    }
+    return obj2;
+  }
+
+// setTimeout(function(){
+//     console.log('定时器开始啦')
+//     new Promise(function(callback){
+//         console.log('在setTimeout中设置的Promise函数 ');
+//         callback();
+//     }).then(function(){
+//         console.log('内部的then函数');
+//     });
+// });
+
+// new Promise(function(resolve){
+//     console.log('马上执行for循环啦');
+//     for(var i = 0; i < 10000; i++){
+//         i == 999 && resolve();
+//     }
+//     setTimeout(function(){
+//         console.log('暂停一段时间 ' + 1000);
+
+//     }, 5000);
+// }).then(function(){
+//     console.log('执行then函数啦')
+// });
+
+// console.log('代码执行结束');
+
+function foo(a) {
+    var a;
+    return a;
+}
+console.log(foo('b'));
