@@ -1,137 +1,3 @@
-// 简单的线性查找就不写了 
-function createArr() {
-    let arr = [];
-    for (let index = 0; index < 20; index++) {
-        arr[index] = Math.floor(Math.random() * 20);
-    }
-    return arr;
-}
-function sort(arr, low, hei) {
-    var midle = Math.floor((low + hei) / 2);
-    var value = arr[midle];
-    // console.log('主元 : ' + value, "下标 : " + midle);
-    while (low <= hei) {
-        while (arr[low] < value && low <= hei) {
-            low++;
-        }
-        while (arr[hei] > value && low <= hei) {
-            hei--;
-        }
-        if (low <= hei) {
-            // console.log('交换的下标  low = ' + low + ', hei =' + hei + '  交换的值 ' + arr[low] + ' , ' + arr[hei]);
-            [arr[low], arr[hei]] = [arr[hei], arr[low]];
-            low++;
-            hei--;
-        }
-    }
-    // console.log(arr, '当前的返回中立下标 ' + (low));
-    // console.log('进行下一次交换 \n');
-    return low;
-}
-
-function quick(arr, low, hei) {
-    if (arr.length > 1) {
-        var index = sort(arr, low, hei);
-        // console.log("当前中立下标" + index);
-        if (low < index - 1) {
-            quick(arr, low, index - 1);
-        }
-        if (index < hei) {
-            quick(arr, index, hei);
-        }
-    }
-    return arr;
-}
-// 二分搜索
-function binarySearch(arr, value) {
-    arr = quick(arr, 0, arr.length - 1);
-    console.log(arr);
-    let midle = Math.floor(arr.length / 2),
-        left = 0,
-        right = arr.length - 1;
-    if (value == arr[midle]) {
-        return midle;
-    }
-    while (value != arr[midle] && left <= right) {
-        midle = Math.floor((right + left) / 2);
-        if (arr[midle] < value) {
-            left = midle + 1;
-        } else if (arr[midle] > value) {
-            right = midle - 1;
-        } else {
-            return midle;
-        }
-    }
-    return -1;
-}
-// 递归二分
-function mergerBinarySearch(arr, value, low, hei) {
-    var index = -1;
-    if (low <= hei) {
-        let midle = Math.floor((low + hei) / 2);
-        console.log("当前的中立元素 的value " + arr[midle]);
-        if (arr[midle] < value) {
-            index = mergerBinarySearch(arr, value, midle + 1, hei);
-        } else if (arr[midle] > value) {
-            index = mergerBinarySearch(arr, value, low, midle - 1);
-        } else {
-            return midle;
-        }
-    }
-    // console.log("结束" );
-    return index;
-
-}
-var arrs1 = createArr();
-console.log(arrs1);
-console.log(binarySearch(arrs1, 5));
-arrs1 = quick(arrs1, 0, arrs1.length - 1);
-var findIndex = mergerBinarySearch(arrs1, 5, 0, arrs1.length - 1);
-console.log('我来找你了  5' + findIndex);
-
-
-// 内插搜索
-function insertValue(arr, value) {
-    let hei = arr.length - 1;
-    let low = 0;
-    let pos;
-    while (low <= hei) {
-        // 有的情况不适用 ， 特别是不存在相同元素的情况
-        pos = Math.floor((value - arr[low]) / (arr[hei] - arr[low]) * (hei - low) + low);
-        if (hei - low == 0) {
-            pos = low;
-        }
-        if (arr[pos] == value) {
-            return pos;
-        }
-
-        if (arr[pos] > value) {
-            if (hei >= pos) {
-                hei = pos - 1;
-
-            } else {
-                hei--;
-            }
-        } else {
-            low = pos + 1;
-        }
-    }
-    return -1;
-}
-
-console.log(arrs1);
-// console.log("为5的索引  ============== " + insertValue(arrs1, 5));
-
-// 洗牌算法    洗牌次数越多洗牌效果越差
-// function shuffle(arr) {
-//     for (let index = arr.length - 1; index >= 0; index--) {
-//         let change = Math.floor(Math.random() * (index + 1));
-//         [arr[change], arr[index]] = [arr[index], arr[change]];
-//     }
-// }
-// shuffle(arrs1);
-// console.log(arrs1);
-
 // ********************** 找零问题
 function minCoinChange(coins) {
     const cache = []; // {1}
@@ -424,3 +290,315 @@ function lcsPuls(wordX, wordY) {
 // }
 
 console.log(lcsPuls('acbaed', 'abcadf'));
+
+// 矩阵链相乘
+function matrixChainOrder(p) {
+    const n = p.length;
+    const m = [];
+    const s = [];
+    for (let i = 1; i <= n; i++) {
+        m[i] = [];
+        m[i][i] = 0;
+    }
+    for (let g = 2; g < n; g++) {
+        for (let i = 1; i <= (n - g) + 1; i++) {
+            const j = (i + g) - 1;
+            m[i][j] = Number.MAX_SAFE_INTEGER;
+            for (let k = i; k <= j - 1; k++) {
+                const q = m[i][k] + m[k + 1][j] + ((p[i - 1] * p[k]) * p[j]); // {1}
+                if (q < m[i][j]) {
+                    m[i][j] = q; // {2}
+                }
+            }
+        }
+    }
+    return m[1][n - 1]; // {3}
+}
+
+
+function maxClass(numbers) {
+    if (numbers <= 0) {
+        return 0;
+    }
+    if (numbers == 1) {
+        return 1;
+    } else if (numbers == 2) {
+        return 2;
+    }
+
+    numbers = maxClass(numbers - 1) + maxClass(numbers - 2);
+    return numbers;
+}
+
+console.log(maxClass(3));
+
+function cutSteel(prices, len) { // 
+    let n = prices.length;
+    let arr = [];
+    for (let i = 0; i <= n; i++) {
+        arr[i] = [];
+        for (let j = 0; j <= n; j++) {
+            arr[i][j] = 0;
+        }
+    }
+
+    for (let i = 0; i <= n; i++) { // 价格下标
+        for (let j = 0; j <= n; j++) { // 长度
+            if (i == 0 || j == 0) {
+                arr[i][j] = 0;
+            } else if (i <= j) {
+                arr[i][j] = Math.max(arr[i - 1][j - i] + prices[i - 1], arr[i - 1][j]);
+            } else {
+                arr[i][j] = arr[i - 1][j];
+            }
+
+        }
+
+    }
+    let lv = Math.floor(len / n);
+    let value = 0;
+    if (lv > 0) {
+        let s = (len - n) % n;
+        value += (arr[n][n] + arr[s][s]);
+    } else {
+        value += arr[n][n];
+    }
+    console.log(arr);
+    console.log('最大价值 ==== > ' + value);
+    return value;
+
+}
+
+function cutSteelPlus(prices, len) {
+
+    if (len == 0) {
+        return 0;
+    }
+    let min = Number.MIN_VALUE;
+    for (let i = 1; i <= prices.length; i++) {
+        if (len - i >= 0) {
+            let value = prices[i - 1] + cutSteelPlus(prices, len - i);
+            if (min > value) {
+                min = min;
+            } else {
+                min = value;
+            }
+            // min = Math.max(min, prices[i-1] + cutSteelPlus(prices, len - i));
+        }
+    }
+    return min;
+
+}
+
+console.log(cutSteelPlus([1, 5, 8, 9, 10, 18, 18, 20, 24, 30], 15));
+function cut(price, len) {
+    var arr = [];
+    for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+
+    }
+}
+
+// 树塔 最长路径
+function findMinValueToTowers() {
+    let i, j;
+    let data = [
+        [9, 0, 0, 0, 0],
+        [12, 15, 0, 0, 0],
+        [10, 6, 8, 0, 0],
+        [2, 18, 9, 5, 0],
+        [19, 7, 10, 4, 16]
+    ];
+
+    for (i = 5 - 1; i > 0; i--)
+        for (j = 0; j < i; j++)
+            data[i - 1][j] += data[i][j] > data[i][j + 1] ? data[i][j] : data[i][j + 1];
+
+    console.log("%d", data[0][0]);
+}
+findMinValueToTowers();
+
+function Cow() {
+    this.age = 0;
+
+    this.addAge = function () {
+        this.age++;
+    }
+}
+
+function productCow(years) {
+    let arr = [];
+
+    let cow = new Cow();
+    cow.age = 4;
+    arr.push(cow);
+
+    for (let index = 0; index < years - 1; index++) {
+
+        let len = arr.length;
+        for (let j = 0; j < len; j++) {
+            const element = arr[j];
+            if (element.age >= 4) {
+                arr.push(new Cow());
+            } else {
+                element.addAge();
+            }
+        }
+
+    }
+    console.log(arr);
+    console.log(arr.length);
+}
+productCow(5);
+
+/**
+ * 从迷宫的一个位置到另一个位置的路径求解
+ * @param {迷宫路径} path 
+ */
+function findPath(path) {
+    let solution = [];
+    for (let i = 0; i < path.length; i++) {
+        solution[i] = [];
+        for (let j = 0; j < path[i].length; j++) {
+            solution[i][j] = 0;
+        }
+    }
+
+    let findSolution = function (path, solution, x, y) {
+        if (x === path.length - 1 && y === path[0].length) {
+            return true;
+        }
+
+        if (isAccess(x, y, path) === true) {
+            solution[x][y] = 1;
+            if (findSolution(path, solution, x + 1, y)) {
+                return true;
+            }
+
+            if (findSolution(path, solution, x, y + 1)) {
+                return true;
+            }
+            solution[x][y] = 0;
+            return false;
+
+        }
+        return false;
+    }
+    let isAccess = function (x, y, path) {
+        if (x >= 0 && y >= 0 && x < path.length && y < path[0].length && path[x][y] !== 0) {
+            return true;
+        }
+        return false;
+    }
+
+    // if (findSolution(path, solution, 0, 0) === true) {
+    //     return solution;
+    // }
+
+    return function(x, y){
+        if(findSolution(path, solution, x, y) === true){
+            return solution;
+        }
+        return '当前没有能够到达该位置的路径';
+    }
+}
+var func = findPath([
+    [1, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 0, 1, 0],
+    [0, 1, 1, 1]
+]);
+console.log(func(0, 0));
+
+// 数独解问题
+function sudoku(matrix){
+    let isRow = function (matrix, x, num){
+        for (let i = 0; i < matrix.length; i++) {
+            const element = matrix[i];
+            if(matrix[x][i] == num){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    let isCol = function (matrix, y , num){
+        for (let i = 0; i < matrix.length; i++) {
+            const element = matrix[i];
+            if(matrix[i][y] == num){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    let isBox = function (matrix, x, y , num){
+        let sx = Math.floor(x / 3);
+        let sy = Math.floor(y / 3),
+            xi,
+            yi;
+        for (let i = 0; i < 3; i++) {
+            xi = sx * 3 + i;
+            for (let j = 0; j < 3; j++) {
+                yi = sy * 3 + j;
+                if(matrix[xi][yi] == num){
+                    return false;
+                }
+                
+            }
+            
+        }
+        return true;
+    }
+
+    let findSolution = function (matrix){
+        let x, y, flag = false;
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = 0; j < matrix[i].length; j++) {
+                if(! matrix[i][j]) {
+                    x = i;
+                    y = j;
+                    flag = true;
+                    break;
+                }               
+            }
+            if(flag){
+                break;
+            }
+        }
+        if(!flag){
+            return true;
+        }
+        for (let i = 1; i <= 9; i++) {
+            if(isCol(matrix, y, i)
+            && isRow(matrix, x, i)
+            && isBox(matrix, x, y, i)){
+                matrix[x][y] = i;
+                console.log('---------------定义数字的坐标 : [' + x + '， [' + y + '] == ' + i);
+
+                if(findSolution(matrix)){// 根据最终返回的结果 ，来确定是否需要回溯
+                    return true;
+                }
+                matrix[x][y] = 0;
+                console.log('当前重新定义数字的坐标 : [' + x + '， [' + y + ']');
+            }
+            
+        }
+        return false; // 如果当前所有的数字在该位置都不能被放入， 那么进行回溯
+    }
+
+    findSolution(matrix);
+    console.log(matrix);
+    return matrix;
+}
+sudoku([
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    ]);
